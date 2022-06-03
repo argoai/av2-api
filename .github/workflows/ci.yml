@@ -39,7 +39,7 @@ jobs:
           pip install
           build
           --user
-          
+
       - name: Build a binary wheel and a source tarball.
         run: >-
           python -m

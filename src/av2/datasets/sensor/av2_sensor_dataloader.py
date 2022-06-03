@@ -21,7 +21,7 @@ from av2.utils.typing import NDArrayBool, NDArrayByte, NDArrayFloat
 
 logger = logging.getLogger(__name__)
 
-# number of nanoseconds in a single second.
+# Number of nanoseconds in a single second.
 NANOSECONDS_PER_SECOND: Final[int] = int(1e9)
 MAX_MEASUREMENT_FREQUENCY_HZ: Final[int] = NANOSECONDS_PER_SECOND
 
@@ -33,14 +33,14 @@ class AV2SensorDataLoader:
         """Create the Sensor dataloader from a data directory and labels directory.
 
         Args:
-            data_dir: Path to raw Argoverse 2.0 data
-            labels_dir: Path to Argoverse 2.0 data labels (e.g. labels or estimated detections/tracks)
+            data_dir: Path to raw Argoverse 2.0 data.
+            labels_dir: Path to Argoverse 2.0 data labels (e.g. labels or estimated detections/tracks).
 
         Raises:
-            ValueError: if input arguments are not Path objects.
+            ValueError: If input arguments are not Path objects.
         """
         if not isinstance(data_dir, Path) or not isinstance(labels_dir, Path):
-            raise ValueError("Input arguments must be Path objects, representing paths to local directories")
+            raise ValueError("Input arguments must be Path objects, representing paths to local directories.")
 
         self._data_dir = data_dir
         self._labels_dir = labels_dir
@@ -57,8 +57,8 @@ class AV2SensorDataLoader:
         Note: the poses dataframe contains tables with columns {timestamp_ns, qw, qx, qy, qz, tx_m, ty_m, tz_m}.
 
         Args:
-            log_id: unique ID of vehicle log.
-            timestamp_ns: timestamp of sensor observation, in nanoseconds.
+            log_id: Unique ID of vehicle log.
+            timestamp_ns: Timestamp of sensor observation, in nanoseconds.
 
         Returns:
             SE(3) transformation to bring points in egovehicle frame into city frame.
@@ -81,13 +81,13 @@ class AV2SensorDataLoader:
         Note: the trajectory is NOT interpolated to give an *exact* sampling rate.
 
         Args:
-            log_id: unique ID of vehicle log.
-            sample_rate_hz: provide sample_rate_hz pose measurements per second. We approximate this
+            log_id: Unique ID of vehicle log.
+            sample_rate_hz: Provide sample_rate_hz pose measurements per second. We approximate this
                 by providing a new pose after a required interval has elapsed. Since pose measurements
                 are provided at a high frequency, this is adequate for the purposes of visualization.
 
         Returns:
-            array of shape (N,2) representing autonomous vehicle's (AV) trajectory.
+            Array of shape (N,2) representing autonomous vehicle's (AV) trajectory.
 
         Raises:
             ValueError: If pose timestamps aren't in chronological order.
@@ -102,7 +102,7 @@ class AV2SensorDataLoader:
 
         log_poses_df = io_utils.read_feather(self._data_dir / log_id / "city_SE3_egovehicle.feather")
 
-        # timestamp of the pose measurement.
+        # Timestamp of the pose measurement.
         timestamp_ns = list(log_poses_df.timestamp_ns)
         tx_m = list(log_poses_df.tx_m)
         ty_m = list(log_poses_df.ty_m)
@@ -110,9 +110,9 @@ class AV2SensorDataLoader:
         if not np.array_equal(np.argsort(timestamp_ns), np.arange(len(timestamp_ns))):
             raise ValueError("Pose timestamps are not sorted chronologically, invalid.")
 
-        # e.g. for 2 Hz, get a sampling rate of 500 ms, then convert to nanoseconds.
+        # E.g., for 2 Hz, get a sampling rate of 500 ms, then convert to nanoseconds.
         interval_threshold_s = 1 / sample_rate_hz
-        # addition must happen in integer domain, not float domain, to prevent overflow
+        # Addition must happen in integer domain, not float domain, to prevent overflow.
         interval_threshold_ns = int(interval_threshold_s * NANOSECONDS_PER_SECOND)
 
         next_timestamp = timestamp_ns[0] + interval_threshold_ns
@@ -120,7 +120,7 @@ class AV2SensorDataLoader:
 
         for timestamp_, tx_, ty_ in zip(timestamp_ns[1:], tx_m[1:], ty_m[1:]):
             if timestamp_ < next_timestamp:
-                # still within last interval, need to exit this interval before sampling new measurement.
+                # Still within last interval, need to exit this interval before sampling new measurement.
                 continue
             traj += [(tx_, ty_)]
             next_timestamp = timestamp_ + interval_threshold_ns
@@ -139,7 +139,7 @@ class AV2SensorDataLoader:
             `log_map_archive_453e5558-6363-38e3-bf9b-42b5ba0a6f1d____PAO_city_71741.json`
 
         Args:
-            log_id: unique ID of vehicle log.
+            log_id: Unique ID of vehicle log.
 
         Returns:
             Name of the city where the log of interest was captured.
@@ -162,12 +162,12 @@ class AV2SensorDataLoader:
         """Return the filepath corresponding to the closest image from the lidar timestamp.
 
         Args:
-            log_id: unique ID of vehicle log.
-            cam_name: name of camera.
-            lidar_timestamp_ns: timestamp of LiDAR sweep capture, in nanoseconds
+            log_id: Unique ID of vehicle log.
+            cam_name: Name of camera.
+            lidar_timestamp_ns: Timestamp of lidar sweep capture, in nanoseconds.
 
         Returns:
-            im_fpath: path to image if one is found within the expected time interval, or else None.
+            im_fpath: Path to image if one is found within the expected time interval, or else None.
         """
         cam_timestamp_ns = self._sdb.get_closest_cam_channel_timestamp(lidar_timestamp_ns, cam_name, log_id)
         if cam_timestamp_ns is None:
@@ -176,14 +176,14 @@ class AV2SensorDataLoader:
         return img_fpath
 
     def get_closest_lidar_fpath(self, log_id: str, cam_timestamp_ns: int) -> Optional[Path]:
-        """Get file path for LiDAR sweep accumulated to a timestamp closest to a camera timestamp.
+        """Get file path for lidar sweep accumulated to a timestamp closest to a camera timestamp.
 
         Args:
-            log_id: unique ID of vehicle log.
-            cam_timestamp_ns: integer timestamp of image capture, in nanoseconds
+            log_id: Unique ID of vehicle log.
+            cam_timestamp_ns: Integer timestamp of image capture, in nanoseconds.
 
         Returns:
-            lidar_fpath: path to sweep .feather file if one is found within the expected time interval, or else None.
+            lidar_fpath: Path to sweep .feather file if one is found within the expected time interval, or else None.
         """
         lidar_timestamp_ns = self._sdb.get_closest_lidar_timestamp(cam_timestamp_ns, log_id)
         if lidar_timestamp_ns is None:
@@ -193,14 +193,15 @@ class AV2SensorDataLoader:
         return lidar_fpath
 
     def get_lidar_fpath_at_lidar_timestamp(self, log_id: str, lidar_timestamp_ns: int) -> Optional[Path]:
-        """Return the file path for the LiDAR sweep accumulated to the query timestamp, if it exists.
+        """Return the file path for the lidar sweep accumulated to the query timestamp, if it exists.
 
         Args:
-            log_id: unique ID of vehicle log.
-            lidar_timestamp_ns: timestamp of LiDAR sweep capture, in nanoseconds
+            log_id: Unique ID of vehicle log.
+            lidar_timestamp_ns: Timestamp of lidar sweep capture, in nanoseconds.
 
         Returns:
             Path to sweep .feather file if one exists at the requested timestamp, or else None.
+
         """
         lidar_fname = f"{lidar_timestamp_ns}.feather"
         lidar_fpath = self._data_dir / log_id / "sensors" / "lidar" / lidar_fname
@@ -210,21 +211,21 @@ class AV2SensorDataLoader:
         return lidar_fpath
 
     def get_lidar_fpath(self, log_id: str, lidar_timestamp_ns: int) -> Path:
-        """Get file path for LiDAR sweep accumulated to the query reference timestamp.
+        """Get file path for lidar sweep accumulated to the query reference timestamp.
 
         Args:
-            log_id: unique ID of vehicle log.
-            lidar_timestamp_ns: query reference timestamp, in nanoseconds.
+            log_id: Unique ID of vehicle log.
+            lidar_timestamp_ns: Query reference timestamp, in nanoseconds.
 
         Returns:
-            Path to .feather file, containing sweep information.
+            Path representing path to .feather file.
         """
         lidar_fname = f"{lidar_timestamp_ns}.feather"
         lidar_fpath = Path(self._data_dir) / log_id / "sensors" / "lidar" / lidar_fname
         return lidar_fpath
 
     def get_ordered_log_lidar_timestamps(self, log_id: str) -> List[int]:
-        """Return chronologically-ordered timestamps corresponding to each LiDAR sweep in a log.
+        """Return chronologically-ordered timestamps corresponding to each lidar sweep in a log.
 
         Args:
             log_id: unique ID of vehicle log.
@@ -237,13 +238,13 @@ class AV2SensorDataLoader:
         return lidar_timestamps_ns
 
     def get_ordered_log_lidar_fpaths(self, log_id: str) -> List[Path]:
-        """Get a list of all file paths for LiDAR sweeps in a single log (ordered chronologically).
+        """Get a list of all file paths for lidar sweeps in a single log (ordered chronologically).
 
         Args:
-            log_id: unique ID of vehicle log.
+            log_id: Unique ID of vehicle log.
 
         Returns:
-            lidar_fpaths: List of paths to chronologically ordered LiDAR feather files in this log.
+            lidar_fpaths: List of paths to chronologically ordered lidar feather files in this log.
                 File paths are strings are of the same length ending with a nanosecond timestamp, thus
                 sorted() will place them in numerical order.
         """
@@ -254,8 +255,8 @@ class AV2SensorDataLoader:
         """Get a list of all file paths for one particular camera in a single log (ordered chronologically).
 
         Args:
-            log_id: unique ID of vehicle log.
-            cam_name: camera name.
+            log_id: Unique ID of vehicle log.
+            cam_name: Camera name.
 
         Returns:
             List of paths, representing paths to ordered JPEG files in this log, for a specific camera.
@@ -294,25 +295,25 @@ class AV2SensorDataLoader:
 
         Args:
             points_lidar_time: Numpy array of shape (N,3) representing points in the egovehicle frame.
-            cam_name: name of camera.
-            cam_timestamp_ns: timestamp (in nanoseconds) when camera image was recorded.
-            lidar_timestamp_ns: timestamp (in nanoseconds) when LiDAR sweep was recorded.
-            log_id: unique ID of vehicle log.
+            cam_name: Name of camera.
+            cam_timestamp_ns: Timestamp (in nanoseconds) when camera image was recorded.
+            lidar_timestamp_ns: Timestamp (in nanoseconds) when lidar sweep was recorded.
+            log_id: Unique ID of vehicle log.
 
         Returns:
-            uv: image plane coordinates, as Numpy array of shape (N,2).
+            uv: Image plane coordinates, as Numpy array of shape (N,2).
             points_cam: Numpy array of shape (N,3) representing coordinates of points within the camera frame.
-            is_valid_points: boolean indicator of valid cheirality and within image boundary, as
+            is_valid_points: Boolean indicator of valid cheirality and within image boundary, as
                 boolean Numpy array of shape (N,).
         """
         pinhole_camera = self.get_log_pinhole_camera(log_id=log_id, cam_name=cam_name)
 
-        # get transformation to bring point in egovehicle frame to city frame,
+        # Get transformation to bring point in egovehicle frame to city frame,
         # at the time when camera image was recorded.
         city_SE3_ego_cam_t = self.get_city_SE3_ego(log_id=log_id, timestamp_ns=cam_timestamp_ns)
 
-        # get transformation to bring point in egovehicle frame to city frame,
-        # at the time when the LiDAR sweep was recorded.
+        # Get transformation to bring point in egovehicle frame to city frame,
+        # at the time when the lidar sweep was recorded.
         city_SE3_ego_lidar_t = self.get_city_SE3_ego(log_id=log_id, timestamp_ns=lidar_timestamp_ns)
 
         return pinhole_camera.project_ego_to_img_motion_compensated(
@@ -322,30 +323,30 @@ class AV2SensorDataLoader:
         )
 
     def get_colored_sweep(self, log_id: str, lidar_timestamp_ns: int) -> NDArrayByte:
-        """Given a LiDAR sweep, use its corresponding RGB imagery to color the sweep points.
+        """Given a lidar sweep, use its corresponding RGB imagery to color the sweep points.
 
         If a sweep points is not captured by any ring camera, it will default to black color.
 
         Args:
-            log_id: unique ID of vehicle log.
-            lidar_timestamp_ns: timestamp (in nanoseconds) when LiDAR sweep was recorded.
+            log_id: Unique ID of vehicle log.
+            lidar_timestamp_ns: Timestamp (in nanoseconds) when lidar sweep was recorded.
 
         Returns:
             Array of shape (N,3) representing RGB colors per sweep point.
 
         Raises:
-            ValueError: If requested timestamp has no corresponding LiDAR sweep.
+            ValueError: If requested timestamp has no corresponding lidar sweep.
         """
         lidar_fpath = self.get_lidar_fpath_at_lidar_timestamp(log_id=log_id, lidar_timestamp_ns=lidar_timestamp_ns)
         if lidar_fpath is None:
-            raise ValueError("Requested colored sweep at a timestamp that has no corresponding LiDAR sweep.")
+            raise ValueError("Requested colored sweep at a timestamp that has no corresponding lidar sweep.")
 
         sweep = Sweep.from_feather(lidar_fpath)
         n_sweep_pts = len(sweep)
-        # defaults to black RGB (0,0,0)
+        # Defaults to black RGB (0,0,0).
         sweep_rgb: NDArrayByte = np.zeros((n_sweep_pts, 3), dtype=np.uint8)
 
-        # color as much of the sweep that we can, as we loop through each camera.
+        # Color as much of the sweep that we can, as we loop through each camera.
         for cam_enum in list(RingCameras):
             cam_name = cam_enum.value
             img_fpath = self.get_closest_img_fpath(
@@ -355,7 +356,7 @@ class AV2SensorDataLoader:
                 continue
             cam_timestamp_ns = int(img_fpath.stem)
 
-            uv, points_cam, is_valid = self.project_ego_to_img_motion_compensated(
+            uv, _, is_valid = self.project_ego_to_img_motion_compensated(
                 points_lidar_time=sweep.xyz,
                 cam_name=cam_name,
                 cam_timestamp_ns=cam_timestamp_ns,
@@ -382,15 +383,15 @@ class AV2SensorDataLoader:
         """Create a sparse or dense depth map, with height & width equivalent to the corresponding camera image.
 
         Args:
-            lidar_points: array of shape (K,3)
-            cam_name: name of camera from which to simulate a per-pixel depth map.
-            log_id: unique identifier of log/scenario.
-            cam_timestamp_ns: timestamp when image was captured, measured in nanoseconds.
-            lidar_timestamp_ns: timestamp when LiDAR was captured, measured in nanoseconds.
-            interp_depth_map: whether to densely interpolate the depth map from sparse LiDAR returns.
+            lidar_points: Array of shape (K,3).
+            cam_name: Name of camera from which to simulate a per-pixel depth map.
+            log_id: Unique identifier of log/scenario.
+            cam_timestamp_ns: Timestamp when image was captured, measured in nanoseconds.
+            lidar_timestamp_ns: Timestamp when lidar was captured, measured in nanoseconds.
+            interp_depth_map: Whether to densely interpolate the depth map from sparse lidar returns.
 
         Returns:
-            depth_map: array of shape (height_px, width_px) representing a depth map.
+            depth_map: Array of shape (height_px, width_px) representing a depth map.
 
         Raises:
             RuntimeError: If `u` or `v` are outside of the camera dimensions.
@@ -398,7 +399,7 @@ class AV2SensorDataLoader:
         pinhole_camera = self.get_log_pinhole_camera(log_id=log_id, cam_name=cam_name)
         height_px, width_px = pinhole_camera.height_px, pinhole_camera.width_px
 
-        # motion compensate always
+        # Motion compensate always.
         uv, points_cam, is_valid_points = self.project_ego_to_img_motion_compensated(
             points_lidar_time=lidar_points,
             cam_name=cam_name,
@@ -407,7 +408,7 @@ class AV2SensorDataLoader:
             log_id=log_id,
         )
         if uv is None or points_cam is None:
-            # poses were missing for either the camera or lidar timestamp
+            # Poses were missing for either the camera or lidar timestamp.
             return None
         if is_valid_points is None or is_valid_points.sum() == 0:
             return None
@@ -418,7 +419,7 @@ class AV2SensorDataLoader:
 
         depth_map: NDArrayFloat = np.zeros((height_px, width_px), dtype=np.float32)
 
-        # form depth map from LiDAR
+        # Form depth map from lidar.
         if interp_depth_map:
             if u.max() > pinhole_camera.width_px or v.max() > pinhole_camera.height_px:
                 raise RuntimeError("Regular grid interpolation will fail due to out-of-bound inputs.")
@@ -441,7 +442,7 @@ def convert_pose_dataframe_to_SE3(pose_df: pd.DataFrame) -> SE3:
     """Convert a dataframe with parameterization of a single pose, to an SE(3) object.
 
     Args:
-        pose_df: parameterization of a single pose.
+        pose_df: Parameterization of a single pose.
 
     Returns:
         SE(3) object representing the egovehicle's pose in the city frame.

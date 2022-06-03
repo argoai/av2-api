@@ -51,7 +51,7 @@ def read_lidar_sweep(fpath: Path, attrib_spec: str = "xyz") -> NDArrayFloat:
             z -> point z-coord
 
         The following attributes are not loaded:
-            intensity -> point intensity/reflectance
+            intensity -> point intensity
             laser_number -> laser number of laser from which point was returned
             offset_ns -> nanosecond timestamp offset per point, from sweep timestamp.
 

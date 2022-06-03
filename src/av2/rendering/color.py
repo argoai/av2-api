@@ -32,6 +32,10 @@ DARK_GRAY_BGR: Final[Tuple[int, int, int]] = (100, 100, 100)
 TRAFFIC_YELLOW1_RGB: Final[Tuple[int, int, int]] = (250, 210, 1)
 TRAFFIC_YELLOW1_BGR: Final[Tuple[int, int, int]] = TRAFFIC_YELLOW1_RGB[::-1]
 
+PURPLE_BGR: Final[Tuple[int, int, int]] = (245, 71, 201)
+GREEN_BGR: Final[Tuple[int, int, int]] = (152, 251, 152)
+LIGHT_RED_BGR: Final[Tuple[int, int, int]] = (143, 117, 255)
+
 
 @unique
 class ColorFormats(str, Enum):
