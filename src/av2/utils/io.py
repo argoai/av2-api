@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 from pyarrow import feather
 
-import av2.geometry.geometry as geometry_utils
+from av2.geometry.conversions import quat_to_mat
 from av2.geometry.se3 import SE3
 from av2.utils.typing import NDArrayByte, NDArrayFloat
 
@@ -106,7 +106,7 @@ def read_ego_SE3_sensor(log_dir: Path) -> SensorPosesMapping:
     """
     ego_SE3_sensor_path = Path(log_dir, "calibration", "egovehicle_SE3_sensor.feather")
     ego_SE3_sensor = read_feather(ego_SE3_sensor_path)
-    rotations = geometry_utils.quat_to_mat(ego_SE3_sensor.loc[:, ["qw", "qx", "qy", "qz"]].to_numpy())
+    rotations = quat_to_mat(ego_SE3_sensor.loc[:, ["qw", "qx", "qy", "qz"]].to_numpy())
     translations = ego_SE3_sensor.loc[:, ["tx_m", "ty_m", "tz_m"]].to_numpy()
     sensor_names = ego_SE3_sensor.loc[:, "sensor_name"].to_numpy()
 
@@ -155,7 +155,7 @@ def read_city_SE3_ego(log_dir: Path) -> TimestampedCitySE3EgoPoses:
     translation_xyz_m = city_SE3_ego.loc[:, ["tx_m", "ty_m", "tz_m"]].to_numpy()
     timestamps_ns = city_SE3_ego["timestamp_ns"].to_numpy()
 
-    rotation = geometry_utils.quat_to_mat(quat_wxyz)
+    rotation = quat_to_mat(quat_wxyz)
     timestamp_city_SE3_ego_dict: TimestampedCitySE3EgoPoses = {
         ts: SE3(rotation=rotation[i], translation=translation_xyz_m[i]) for i, ts in enumerate(timestamps_ns)
     }

@@ -11,7 +11,15 @@ from scipy.spatial.transform import Rotation
 
 import av2.geometry.geometry as geometry_utils
 from av2.datasets.sensor.constants import AnnotationCategories
-from av2.geometry.geometry import mat_to_xyz, xyz_to_mat
+from av2.geometry.conversions import (
+    cartesian_to_homogeneous,
+    cartesian_to_spherical,
+    homogeneous_to_cartesian,
+    mat_to_xyz,
+    quat_to_mat,
+    xy_to_uv,
+    xyz_to_mat,
+)
 from av2.geometry.se3 import SE3
 from av2.structures.cuboid import Cuboid, CuboidList
 from av2.utils.typing import NDArrayBool, NDArrayFloat, NDArrayInt
@@ -46,22 +54,22 @@ def test_wrap_angles(yaw_1: float, yaw_2: float, expected_error_deg: float) -> N
     assert np.allclose(error_deg, expected_error_deg, atol=1e-2)
 
 
-def test_cart_to_hom_2d() -> None:
+def test_cartesian_to_homogeneous_2d() -> None:
     """Convert 2d cartesian coordinates to homogenous, and back again."""
     cart: NDArrayFloat = np.arange(16 * 2).reshape(16, 2).astype(np.float64)
 
-    hom = geometry_utils.cart_to_hom(cart=cart)
-    cart_ = geometry_utils.hom_to_cart(hom=hom)
+    hom = cartesian_to_homogeneous(coordinates_cartesian_m=cart)
+    cart_ = homogeneous_to_cartesian(coordinates_homogeneous=hom)
 
     assert np.array_equal(cart, cart_)
 
 
-def test_cart_to_hom_3d() -> None:
+def test_cartesian_to_homogeneous_3d() -> None:
     """Convert 3d cartesian coordinates to homogenous, and back again."""
     cart: NDArrayFloat = np.arange(16 * 3).reshape(16, 3).astype(np.float64)
 
-    hom = geometry_utils.cart_to_hom(cart=cart)
-    cart_ = geometry_utils.hom_to_cart(hom=hom)
+    hom = cartesian_to_homogeneous(coordinates_cartesian_m=cart)
+    cart_ = homogeneous_to_cartesian(coordinates_homogeneous=hom)
 
     assert np.array_equal(cart, cart_)
 
@@ -93,7 +101,7 @@ def test_xy_to_uv(xy: NDArrayFloat, width: int, height: int, expected_uv: NDArra
         height: Texture grid height.
         expected_uv: Expected (...,2) array of texture / pixel coordinates.
     """
-    assert np.array_equal(expected_uv, geometry_utils.xy_to_uv(xy, width, height))
+    assert np.array_equal(expected_uv, xy_to_uv(xy, width, height))
 
 
 @pytest.mark.parametrize(
@@ -113,7 +121,7 @@ def test_quat_to_mat_3d(quat_wxyz: NDArrayFloat) -> None:
     # Quaternion to Quaternion round-trip conversion.
     # (Note: For comparison, Quaternion needs to be converted from scalar last to scalar first.)
     quat_to_quat: Callable[[NDArrayFloat], Any] = lambda quat_wxyz: Rotation.as_quat(
-        Rotation.from_matrix(geometry_utils.quat_to_mat(quat_wxyz))
+        Rotation.from_matrix(quat_to_mat(quat_wxyz))
     )[..., [3, 0, 1, 2]]
 
     assert np.allclose(quat_wxyz, quat_to_quat(quat_wxyz))
@@ -130,14 +138,14 @@ def test_quat_to_mat_3d(quat_wxyz: NDArrayFloat) -> None:
     ],
     ids=[f"Cartesian to Spherical coodinates (Test Case: {idx + 1})" for idx in range(2)],
 )
-def test_cart_to_sph_3d(cart_xyz: NDArrayFloat, expected_sph_theta_phi_r: NDArrayFloat) -> None:
+def test_cartesian_to_spherical_3d(cart_xyz: NDArrayFloat, expected_sph_theta_phi_r: NDArrayFloat) -> None:
     """Test conversion of cartesian coordinates to spherical coordinates.
 
     Args:
         cart_xyz: (...,3) Array of points (x,y,z) in Cartesian space.
         expected_sph_theta_phi_r: (...,3) Array in spherical space. [Order: (azimuth, inclination, radius)].
     """
-    assert np.allclose(expected_sph_theta_phi_r, geometry_utils.cart_to_sph(cart_xyz))
+    assert np.allclose(expected_sph_theta_phi_r, cartesian_to_spherical(cart_xyz))
 
 
 @pytest.mark.parametrize(

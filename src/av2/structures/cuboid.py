@@ -13,9 +13,9 @@ from typing import Final, List, Optional, Tuple
 import numpy as np
 import pandas as pd
 
-from av2.geometry import geometry as geometry_utils
 from av2.geometry.camera.pinhole_camera import PinholeCamera
-from av2.geometry.geometry import compute_interior_points_mask, quat_to_mat
+from av2.geometry.conversions import quat_to_mat
+from av2.geometry.geometry import compute_interior_points_mask
 from av2.geometry.se3 import SE3
 from av2.rendering.color import BLUE_BGR, TRAFFIC_YELLOW1_BGR
 from av2.rendering.vector import draw_line_frustum
@@ -166,7 +166,7 @@ class Cuboid:
         length_m, width_m, height_m = params[3:6]
         quat_wxyz = params[6:10]
 
-        rotation = geometry_utils.quat_to_mat(quat_wxyz)
+        rotation = quat_to_mat(quat_wxyz)
         ego_SE3_object = SE3(rotation=rotation, translation=translation)
         return cls(
             dst_SE3_object=ego_SE3_object,

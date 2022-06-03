@@ -31,7 +31,8 @@ from av2.evaluation.detection.constants import (
     FilterMetricType,
     InterpType,
 )
-from av2.geometry.geometry import mat_to_xyz, quat_to_mat, wrap_angles
+from av2.geometry.conversions import mat_to_xyz, quat_to_mat
+from av2.geometry.geometry import wrap_angles
 from av2.geometry.iou import iou_3d_axis_aligned
 from av2.geometry.se3 import SE3
 from av2.map.map_api import ArgoverseStaticMap, RasterLayerType

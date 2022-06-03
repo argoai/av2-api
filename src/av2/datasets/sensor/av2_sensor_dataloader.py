@@ -13,6 +13,7 @@ import av2.utils.dense_grid_interpolation as dense_grid_interpolation
 import av2.utils.io as io_utils
 from av2.datasets.sensor.constants import RingCameras
 from av2.geometry.camera.pinhole_camera import PinholeCamera
+from av2.geometry.conversions import quat_to_mat
 from av2.geometry.se3 import SE3
 from av2.structures.cuboid import CuboidList
 from av2.structures.sweep import Sweep
@@ -450,6 +451,6 @@ def convert_pose_dataframe_to_SE3(pose_df: pd.DataFrame) -> SE3:
     tx_m, ty_m, tz_m = pose_df[["tx_m", "ty_m", "tz_m"]].to_numpy().squeeze()
     city_q_ego: NDArrayFloat = np.array([qw, qx, qy, qz])
     city_t_ego: NDArrayFloat = np.array([tx_m, ty_m, tz_m])
-    city_R_ego = geometry_utils.quat_to_mat(quat_wxyz=city_q_ego)
+    city_R_ego = quat_to_mat(quat_wxyz=city_q_ego)
     city_SE3_ego = SE3(rotation=city_R_ego, translation=city_t_ego)
     return city_SE3_ego

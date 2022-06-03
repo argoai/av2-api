@@ -11,8 +11,8 @@ from typing import Tuple, Union
 
 import numpy as np
 
-import av2.geometry.geometry as geometry_utils
 import av2.utils.io as io_utils
+from av2.geometry.conversions import cartesian_to_homogeneous
 from av2.geometry.se3 import SE3
 from av2.utils.typing import NDArrayBool, NDArrayFloat, NDArrayInt
 
@@ -150,7 +150,7 @@ class PinholeCamera:
                 boolean Numpy array of shape (N,).
         """
         # convert cartesian to homogeneous coordinates.
-        points_ego_hom = geometry_utils.cart_to_hom(points_ego)
+        points_ego_hom = cartesian_to_homogeneous(points_ego)
         points_cam: NDArrayFloat = self.extrinsics @ points_ego_hom.T
 
         # remove bottom row of all 1s.

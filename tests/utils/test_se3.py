@@ -6,7 +6,7 @@ from typing import Any, Callable, Union
 
 import numpy as np
 
-import av2.geometry.geometry as geometry_utils
+from av2.geometry.conversions import quat_to_mat
 from av2.geometry.se3 import SE3
 from av2.utils.typing import NDArrayFloat
 
@@ -26,7 +26,7 @@ def test_SE3_constructor() -> None:
 
     # quaternion has order (w,x,y,z)
     q: NDArrayFloat = np.array([0.700322174885275, 0.0, 0.0, -0.713826905743933])
-    R = geometry_utils.quat_to_mat(q)
+    R = quat_to_mat(q)
 
     dst_se3_src = SE3(rotation=R.copy(), translation=t.copy())
 
@@ -60,7 +60,7 @@ def test_SE3_transform_point_cloud_by_quaternion() -> None:
 
     # quaternion has order (w,x,y,z)
     q: NDArrayFloat = np.array([0.700322174885275, 0.0, 0.0, -0.713826905743933])
-    R = geometry_utils.quat_to_mat(q)
+    R = quat_to_mat(q)
 
     dst_se3_src = SE3(rotation=R.copy(), translation=t.copy())
     transformed_pts = dst_se3_src.transform_point_cloud(pts.copy())
@@ -124,7 +124,7 @@ def test_SE3_inverse_transform_point_cloud() -> None:
 
     # quaternion has order (w,x,y,z)
     q: NDArrayFloat = np.array([0.700322174885275, 0.0, 0.0, -0.713826905743933])
-    R = geometry_utils.quat_to_mat(q)
+    R = quat_to_mat(q)
 
     dst_se3_src = SE3(rotation=R, translation=t)
     pts = dst_se3_src.inverse().transform_point_cloud(transformed_pts)
@@ -175,7 +175,7 @@ def test_benchmark_SE3_transform_point_cloud_optimized(benchmark: Callable[..., 
 
     # quaternion has order (w,x,y,z)
     q: NDArrayFloat = np.array([0.700322174885275, 0.0, 0.0, -0.713826905743933])
-    R = geometry_utils.quat_to_mat(q)
+    R = quat_to_mat(q)
 
     dst_SE3_src = SE3(rotation=R.copy(), translation=t.copy())
 
@@ -203,7 +203,7 @@ def test_benchmark_SE3_transform_point_cloud_unoptimized(benchmark: Callable[...
 
     # quaternion has order (w,x,y,z)
     q: NDArrayFloat = np.array([0.700322174885275, 0.0, 0.0, -0.713826905743933])
-    R = geometry_utils.quat_to_mat(q)
+    R = quat_to_mat(q)
 
     dst_SE3_src = SE3(rotation=R.copy(), translation=t.copy())
 
