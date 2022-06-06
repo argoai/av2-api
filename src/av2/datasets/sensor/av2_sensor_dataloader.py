@@ -362,7 +362,7 @@ class AV2SensorDataLoader:
                 lidar_timestamp_ns=lidar_timestamp_ns,
                 log_id=log_id,
             )
-            uv_valid = np.round(uv[is_valid]).astype(np.int64)  # type: ignore
+            uv_valid = np.round(uv[is_valid]).astype(np.int64)
             u = uv_valid[:, 0]
             v = uv_valid[:, 1]
             img = io_utils.read_img(img_fpath, channel_order="RGB")
@@ -412,8 +412,8 @@ class AV2SensorDataLoader:
         if is_valid_points is None or is_valid_points.sum() == 0:
             return None
 
-        u = np.round(uv[:, 0][is_valid_points]).astype(np.int32)  # type: ignore
-        v = np.round(uv[:, 1][is_valid_points]).astype(np.int32)  # type: ignore
+        u = np.round(uv[:, 0][is_valid_points]).astype(np.int32)
+        v = np.round(uv[:, 1][is_valid_points]).astype(np.int32)
         z = points_cam[:, 2][is_valid_points]
 
         depth_map: NDArrayFloat = np.zeros((height_px, width_px), dtype=np.float32)

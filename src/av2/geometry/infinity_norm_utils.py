@@ -38,5 +38,5 @@ def has_pts_in_infinity_norm_radius(points: NDArrayFloat, window_center: NDArray
     # reshape just in case was given column vector
     window_center = window_center.reshape(1, 2)
 
-    dists = np.linalg.norm(points - window_center, ord=np.inf, axis=1)  # type: ignore
+    dists = np.linalg.norm(points - window_center, ord=np.inf, axis=1)
     return bool(dists.min() < window_sz)

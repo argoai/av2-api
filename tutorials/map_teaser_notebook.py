@@ -110,7 +110,7 @@ def visualize_raster_layers(data_root: Path, log_id: str, save_figures: bool) ->
     height_array = avm.raster_ground_height_layer.array
     ax = plt.subplot()
     plt.title("Ground surface height (@ 30 centimeter resolution).")
-    img = plt.imshow(np.flipud(height_array))  # type: ignore
+    img = plt.imshow(np.flipud(height_array))
 
     divider = make_axes_locatable(ax)
     cax = divider.append_axes("right", size="5%", pad=0.05)
@@ -122,17 +122,17 @@ def visualize_raster_layers(data_root: Path, log_id: str, save_figures: bool) ->
 
     fig = plt.figure(figsize=(10, 10))
     plt.subplot(1, 3, 1)
-    plt.imshow(np.flipud(height_array))  # type: ignore
+    plt.imshow(np.flipud(height_array))
     plt.title("Ground Surface Height")
 
     plt.subplot(1, 3, 2)
     da_array = avm.raster_drivable_area_layer.array
-    plt.imshow(np.flipud(da_array))  # type: ignore
+    plt.imshow(np.flipud(da_array))
     plt.title("Drivable Area (rasterized \nfrom vector polygons)")
 
     plt.subplot(1, 3, 3)
     roi_array = avm.raster_roi_layer.array
-    plt.imshow(np.flipud(roi_array))  # type: ignore
+    plt.imshow(np.flipud(roi_array))
     plt.title("Region of Interest (ROI)")
 
     fig.tight_layout()
@@ -294,12 +294,12 @@ def visualize_ego_pose_and_lane_markings(data_root: Path, log_id: str, save_figu
     traj_ns = loader.get_subsampled_ego_trajectory(log_id, sample_rate_hz=1e9)
     # now, sample @ 1 Hz
     traj_1hz = loader.get_subsampled_ego_trajectory(log_id, sample_rate_hz=1.0)
-    med: NDArrayFloat = np.median(traj_ns, axis=0)  # type: ignore
+    med: NDArrayFloat = np.median(traj_ns, axis=0)
     med_x, med_y = med
 
     # Derive plot area from trajectory (with radius defined in infinity norm).
     # A larger distance traveled during trajectory means we should have a larger viewing window size.
-    view_radius_m: float = float(np.linalg.norm(traj_ns[-1] - traj_ns[0])) + 20  # type: ignore
+    view_radius_m: float = float(np.linalg.norm(traj_ns[-1] - traj_ns[0])) + 20
     xlims = [med_x - view_radius_m, med_x + view_radius_m]
     ylims = [med_y - view_radius_m, med_y + view_radius_m]
 

@@ -201,7 +201,7 @@ def write_img(img_path: Path, img: NDArrayByte, channel_order: str = "RGB") -> N
         raise ValueError("Unsupported channel order (must be BGR or RGB).")
 
     if channel_order == "RGB":
-        img: NDArrayByte = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)  # type: ignore
+        img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
 
     cv2.imwrite(str(img_path), img)
 

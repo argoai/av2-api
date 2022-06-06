@@ -30,8 +30,8 @@ def get_polyline_length(polyline: NDArrayFloat) -> float:
     """
     if polyline.shape[1] not in [2, 3]:
         raise RuntimeError("Polyline must have shape (N,2) or (N,3)")
-    offsets = np.diff(polyline, axis=0)  # type: ignore
-    return float(np.linalg.norm(offsets, axis=1).sum())  # type: ignore
+    offsets = np.diff(polyline, axis=0)
+    return float(np.linalg.norm(offsets, axis=1).sum())
 
 
 def interp_polyline_by_fixed_waypt_interval(polyline: NDArrayFloat, waypt_interval: float) -> Tuple[NDArrayFloat, int]:
@@ -130,12 +130,12 @@ def centerline_to_polygon(
         Numpy array of shape (2N+1,2) or (2N+1,3), with duplicate first and last vertices.
     """
     # eliminate duplicates
-    _, inds = np.unique(centerline, axis=0, return_index=True)  # type: ignore
+    _, inds = np.unique(centerline, axis=0, return_index=True)
     # does not return indices in sorted order
     inds = np.sort(inds)
     centerline = centerline[inds]
 
-    grad: NDArrayFloat = np.gradient(centerline, axis=0)  # type: ignore
+    grad: NDArrayFloat = np.gradient(centerline, axis=0)
     dx = grad[:, 0]
     dy = grad[:, 1]
 

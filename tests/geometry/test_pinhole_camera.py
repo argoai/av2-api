@@ -45,12 +45,12 @@ def _fit_plane_to_point_cloud(points_xyz: NDArrayFloat) -> Tuple[float, float, f
         (4,) Plane coefficients. Defining ax + by + cz = d for the plane.
     """
     center_xyz: NDArrayFloat = np.mean(points_xyz, axis=0)
-    out: Tuple[NDArrayFloat, NDArrayFloat, NDArrayFloat] = np.linalg.svd(points_xyz - center_xyz)  # type: ignore
+    out: Tuple[NDArrayFloat, NDArrayFloat, NDArrayFloat] = np.linalg.svd(points_xyz - center_xyz)
     vh = out[2]
 
     # Get the unitary normal vector
     a, b, c = float(vh[2, 0]), float(vh[2, 1]), float(vh[2, 2])
-    d: float = -np.dot([a, b, c], center_xyz)  # type: ignore
+    d: float = -np.dot([a, b, c], center_xyz)
     return (a, b, c, d)
 
 
@@ -308,10 +308,10 @@ def test_frustum_planes_ring_cam() -> None:
     bottom_plane_expected: NDArrayFloat = np.array([0.0, -fx_px, height_px / 2.0, 0.0])
     top_plane_expected: NDArrayFloat = np.array([0.0, fx_px, height_px / 2.0, 0.0])
 
-    assert np.allclose(left_plane, left_plane_expected / np.linalg.norm(left_plane_expected))  # type: ignore
-    assert np.allclose(right_plane, right_plane_expected / np.linalg.norm(right_plane_expected))  # type: ignore
-    assert np.allclose(bottom_plane, bottom_plane_expected / np.linalg.norm(bottom_plane_expected))  # type: ignore
-    assert np.allclose(top_plane, top_plane_expected / np.linalg.norm(top_plane_expected))  # type: ignore
+    assert np.allclose(left_plane, left_plane_expected / np.linalg.norm(left_plane_expected))
+    assert np.allclose(right_plane, right_plane_expected / np.linalg.norm(right_plane_expected))
+    assert np.allclose(bottom_plane, bottom_plane_expected / np.linalg.norm(bottom_plane_expected))
+    assert np.allclose(top_plane, top_plane_expected / np.linalg.norm(top_plane_expected))
     assert np.allclose(near_plane, near_plane_expected)
 
 
@@ -346,10 +346,10 @@ def test_generate_frustum_planes_stereo() -> None:
     bottom_plane_expected: NDArrayFloat = np.array([0.0, -fx_px, height_px / 2.0, 0.0])
     top_plane_expected: NDArrayFloat = np.array([0.0, fx_px, height_px / 2.0, 0.0])
 
-    assert np.allclose(left_plane, left_plane_expected / np.linalg.norm(left_plane_expected))  # type: ignore
-    assert np.allclose(right_plane, right_plane_expected / np.linalg.norm(right_plane_expected))  # type: ignore
-    assert np.allclose(bottom_plane, bottom_plane_expected / np.linalg.norm(bottom_plane_expected))  # type: ignore
-    assert np.allclose(top_plane, top_plane_expected / np.linalg.norm(top_plane_expected))  # type: ignore
+    assert np.allclose(left_plane, left_plane_expected / np.linalg.norm(left_plane_expected))
+    assert np.allclose(right_plane, right_plane_expected / np.linalg.norm(right_plane_expected))
+    assert np.allclose(bottom_plane, bottom_plane_expected / np.linalg.norm(bottom_plane_expected))
+    assert np.allclose(top_plane, top_plane_expected / np.linalg.norm(top_plane_expected))
     assert np.allclose(near_plane, near_plane_expected)
 
 
@@ -422,7 +422,7 @@ def test_compute_pixel_ray_directions_vectorized() -> None:
     ray_dirs = pinhole_camera.compute_pixel_ray_directions(uv)
 
     gt_ray_dir: NDArrayFloat = np.array([2, -3, 10.0])
-    gt_ray_dir /= np.linalg.norm(gt_ray_dir)  # type: ignore
+    gt_ray_dir /= np.linalg.norm(gt_ray_dir)
 
     for i in range(4):
         assert np.allclose(gt_ray_dir, ray_dirs[i])
@@ -483,7 +483,7 @@ def test_compute_pixel_rays() -> None:
     ray_dir = _compute_pixel_ray_direction(u, v, fx, fy, img_w, img_h)
 
     gt_ray_dir: NDArrayFloat = np.array([2.0, -3.0, 10.0])
-    gt_ray_dir /= np.linalg.norm(gt_ray_dir)  # type: ignore
+    gt_ray_dir /= np.linalg.norm(gt_ray_dir)
 
     assert np.allclose(gt_ray_dir, ray_dir)
 
@@ -536,7 +536,7 @@ def _compute_pixel_ray_direction(u: float, v: float, fx: float, fy: float, img_w
     y_center_offs = v - py
 
     ray_dir: NDArrayFloat = np.array([x_center_offs, y_center_offs, fx])
-    ray_dir /= np.linalg.norm(ray_dir)  # type: ignore
+    ray_dir /= np.linalg.norm(ray_dir)
     return ray_dir
 
 

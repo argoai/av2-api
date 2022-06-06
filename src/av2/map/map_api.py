@@ -130,11 +130,11 @@ class GroundHeightLayer(RasterMapLayer):
             raise RuntimeError("Sim(2) mapping from city to image coordinates is missing")
 
         # load the file with rasterized values
-        ground_height_array: NDArrayFloat = np.load(ground_height_npy_fpaths[0])  # type: ignore
+        ground_height_array: NDArrayFloat = np.load(ground_height_npy_fpaths[0])
 
         array_Sim2_city = Sim2.from_json(Sim2_json_fpaths[0])
 
-        return cls(array=ground_height_array.astype(np.float32), array_Sim2_city=array_Sim2_city)
+        return cls(array=ground_height_array.astype(float), array_Sim2_city=array_Sim2_city)
 
     def get_ground_points_boolean(self, points_xyz: NDArrayFloat) -> NDArrayBool:
         """Check whether each 3d point is likely to be from the ground surface.
@@ -221,7 +221,7 @@ class DrivableAreaMapLayer(RasterMapLayer):
         da_polygons_img = []
         for da_polygon_city in drivable_areas:
             da_polygon_img = array_Sim2_city.transform_from(da_polygon_city.xyz[:, :2])
-            da_polygon_img = np.round(da_polygon_img).astype(np.int32)  # type: ignore
+            da_polygon_img = np.round(da_polygon_img).astype(np.int32)
             da_polygons_img.append(da_polygon_img)
 
         da_mask = raster_utils.get_mask_from_polygons(da_polygons_img, img_h, img_w)

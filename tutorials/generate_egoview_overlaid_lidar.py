@@ -53,8 +53,8 @@ def generate_egoview_overlaid_lidar(
 
     # repeat red to green colormap every 50 m.
     colors_arr_rgb = color_utils.create_colormap(color_list=[RED_HEX, GREEN_HEX], n_colors=NUM_RANGE_BINS)
-    colors_arr_rgb = (colors_arr_rgb * 255).astype(np.uint8)  # type: ignore
-    colors_arr_bgr: NDArrayByte = np.fliplr(colors_arr_rgb)  # type: ignore
+    colors_arr_rgb = (colors_arr_rgb * 255).astype(np.uint8)
+    colors_arr_bgr: NDArrayByte = np.fliplr(colors_arr_rgb)
 
     for _, cam_name in enumerate(list(RingCameras)):
         cam_im_fpaths = loader.get_ordered_log_cam_fpaths(log_id, cam_name)
@@ -104,10 +104,10 @@ def generate_egoview_overlaid_lidar(
             if is_valid_points.sum() == 0:
                 continue
 
-            uv_int: NDArrayInt = np.round(uv[is_valid_points]).astype(np.int32)  # type: ignore
+            uv_int: NDArrayInt = np.round(uv[is_valid_points]).astype(np.int32)
             points_cam = points_cam[is_valid_points]
-            pt_ranges: NDArrayFloat = np.linalg.norm(points_cam[:, :3], axis=1)  # type: ignore
-            color_bins: NDArrayInt = np.round(pt_ranges).astype(np.int32)  # type: ignore
+            pt_ranges: NDArrayFloat = np.linalg.norm(points_cam[:, :3], axis=1)
+            color_bins: NDArrayInt = np.round(pt_ranges).astype(np.int32)
             # account for moving past 100 meters, loop around again
             color_bins = color_bins % NUM_RANGE_BINS
             uv_colors_bgr = colors_arr_bgr[color_bins]

@@ -184,7 +184,7 @@ def test_matrix_homogenous_transform() -> None:
     world_pts_h: NDArrayFloat = np.hstack([world_pts, np.ones((4, 1))])
 
     # multiply each (3,1) homogeneous point vector w/ transform matrix
-    img_pts_h = (imgSw.matrix @ world_pts_h.T).T  # type: ignore
+    img_pts_h = (imgSw.matrix @ world_pts_h.T).T
     # divide (x,y,s) by s
     img_pts = img_pts_h[:, :2] / img_pts_h[:, 2].reshape(-1, 1)
     assert np.allclose(expected_img_pts, img_pts)

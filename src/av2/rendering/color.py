@@ -51,7 +51,7 @@ def create_range_map(points_xyz: NDArrayFloat) -> NDArrayByte:
         (N,3) RGB colormap.
     """
     range = points_xyz[..., 2]
-    range = np.round(range).astype(int)  # type: ignore
+    range = np.round(range).astype(int)
     color = plt.get_cmap("turbo")(np.arange(0, range.max() + 1))
     color = color[range]
     range_cmap: NDArrayByte = (color * 255.0).astype(np.uint8)
@@ -71,4 +71,4 @@ def create_colormap(color_list: Sequence[str], n_colors: int) -> NDArrayFloat:
     cmap = LinearSegmentedColormap.from_list(name="dummy_name", colors=color_list)
     colorscale: NDArrayFloat = np.array([cmap(k * 1 / n_colors) for k in range(n_colors)])
     # ignore the 4th alpha channel
-    return colorscale[:, :3]  # type: ignore
+    return colorscale[:, :3]

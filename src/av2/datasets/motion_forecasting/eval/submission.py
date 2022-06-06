@@ -91,7 +91,7 @@ class ChallengeSubmission:
         submission_df.sort_values(by="probability", inplace=True, ascending=False)
 
         # From serialized data, build scenario-track mapping for predictions
-        submission_dict: Dict[str, ScenarioPredictions] = defaultdict(lambda: defaultdict(dict))  # type: ignore
+        submission_dict: Dict[str, ScenarioPredictions] = defaultdict(lambda: defaultdict(dict))
         for (scenario_id, track_id), track_df in submission_df.groupby(["scenario_id", "track_id"]):
             predicted_trajectories_x = np.stack(track_df.loc[:, "predicted_trajectory_x"].values.tolist())
             predicted_trajectories_y = np.stack(track_df.loc[:, "predicted_trajectory_y"].values.tolist())

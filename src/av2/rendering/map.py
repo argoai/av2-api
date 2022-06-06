@@ -210,8 +210,8 @@ class EgoViewMapRenderer:
         if is_valid_points.sum() == 0:
             return
 
-        u: NDArrayInt = np.round(uv[:, 0][is_valid_points]).astype(np.int32)  # type: ignore
-        v: NDArrayInt = np.round(uv[:, 1][is_valid_points]).astype(np.int32)  # type: ignore
+        u: NDArrayInt = np.round(uv[:, 0][is_valid_points]).astype(np.int32)
+        v: NDArrayInt = np.round(uv[:, 1][is_valid_points]).astype(np.int32)
 
         lane_z = points_cam[:, 2][is_valid_points]
 
@@ -252,7 +252,7 @@ def draw_visible_polyline_segments_cv2(
         color: Tuple of shape (3,) with a BGR format color
         thickness_px: thickness (in pixels) to use when rendering the polyline.
     """
-    line_segments_arr_int: NDArrayInt = np.round(line_segments_arr).astype(int)  # type: ignore
+    line_segments_arr_int: NDArrayInt = np.round(line_segments_arr).astype(int)
     for i in range(len(line_segments_arr_int) - 1):
 
         if (not valid_pts_bool[i]) or (not valid_pts_bool[i + 1]):

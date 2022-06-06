@@ -285,7 +285,7 @@ def compute_interior_points_mask(points_xyz: NDArrayFloat, cuboid_vertices: NDAr
     sim_uvw_ref = uvw @ ref_vertex  # (3,)
 
     # Only care about the diagonal.
-    sim_uvw_vertices: NDArrayFloat = np.diag(uvw @ vertices.transpose())  # type: ignore # (3,)
+    sim_uvw_vertices: NDArrayFloat = np.diag(uvw @ vertices.transpose())  # (3,)
 
     # Check 6 conditions (2 for each of the 3 orthogonal directions).
     # Refer to the linked reference for additional information.

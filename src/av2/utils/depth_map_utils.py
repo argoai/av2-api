@@ -29,7 +29,7 @@ def compute_allowed_noise_per_point(points_cam: NDArrayFloat) -> NDArrayFloat:
     Returns:
         array of shape (N,) representing allowed amount of noise, in meters, for entries in a depth map.
     """
-    dists_away: NDArrayFloat = np.linalg.norm(points_cam, axis=1)  # type: ignore
+    dists_away: NDArrayFloat = np.linalg.norm(points_cam, axis=1)
 
     max_dist_away = dists_away.max()
     max_dist_away = max(max_dist_away, MIN_DISTANCE_AWAY_M)
@@ -68,4 +68,4 @@ def vis_depth_map(
     plt.subplot(1, 2, 1)
     plt.imshow(img_rgb)
     plt.subplot(1, 2, 2)
-    plt.imshow((depth_map * 3).astype(np.uint8), cmap="inferno")  # type: ignore
+    plt.imshow((depth_map * 3).astype(np.uint8), cmap="inferno")

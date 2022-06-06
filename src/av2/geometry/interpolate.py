@@ -35,7 +35,7 @@ def compute_lane_width(left_even_pts: NDArrayFloat, right_even_pts: NDArrayFloat
         raise ValueError(
             f"Shape of left_even_pts {left_even_pts.shape} did not match right_even_pts {right_even_pts.shape}"
         )
-    lane_width = float(np.mean(np.linalg.norm(left_even_pts - right_even_pts, axis=1)))  # type: ignore
+    lane_width = float(np.mean(np.linalg.norm(left_even_pts - right_even_pts, axis=1)))
     return lane_width
 
 
@@ -57,7 +57,7 @@ def compute_mid_pivot_arc(single_pt: NDArrayFloat, arc_pts: NDArrayFloat) -> Tup
     """
     num_pts = len(arc_pts)
     # form ladder with equal number of vertices on each side
-    single_pt_tiled = np.tile(single_pt, (num_pts, 1))  # type: ignore
+    single_pt_tiled = np.tile(single_pt, (num_pts, 1))
     # compute midpoint for each rung of the ladder
     centerline_pts = (single_pt_tiled + arc_pts) / 2.0
     lane_width = compute_lane_width(single_pt_tiled, arc_pts)
@@ -111,7 +111,7 @@ def compute_midpoint_line(
     left_even_pts = interp_arc(num_interp_pts, points=left_ln_boundary)
     right_even_pts = interp_arc(num_interp_pts, points=right_ln_boundary)
 
-    centerline_pts = (left_even_pts + right_even_pts) / 2.0  # type: ignore
+    centerline_pts = (left_even_pts + right_even_pts) / 2.0
 
     lane_width = compute_lane_width(left_even_pts, right_even_pts)
     return centerline_pts, lane_width
@@ -151,7 +151,7 @@ def interp_arc(t: int, points: NDArrayFloat) -> NDArrayFloat:
     # Compute the chordal arclength of each segment.
     # Compute differences between each x coord, to get the dx's
     # Do the same to get dy's. Then the hypotenuse length is computed as a norm.
-    chordlen: NDArrayFloat = np.linalg.norm(np.diff(points, axis=0), axis=1)  # type: ignore
+    chordlen: NDArrayFloat = np.linalg.norm(np.diff(points, axis=0), axis=1)
     # Normalize the arclengths to a unit total
     chordlen = chordlen / np.sum(chordlen)
     # cumulative arclength
@@ -160,10 +160,10 @@ def interp_arc(t: int, points: NDArrayFloat) -> NDArrayFloat:
     cumarc[1:] = np.cumsum(chordlen)
 
     # which interval did each point fall in, in terms of eq_spaced_points? (bin index)
-    tbins: NDArrayInt = np.digitize(eq_spaced_points, bins=cumarc).astype(int)  # type: ignore
+    tbins: NDArrayInt = np.digitize(eq_spaced_points, bins=cumarc).astype(int)
 
     # #catch any problems at the ends
-    tbins[np.where((tbins <= 0) | (eq_spaced_points <= 0))] = 1  # type: ignore
+    tbins[np.where((tbins <= 0) | (eq_spaced_points <= 0))] = 1
     tbins[np.where((tbins >= n) | (eq_spaced_points >= 1))] = n - 1
 
     s = np.divide((eq_spaced_points - cumarc[tbins - 1]), chordlen[tbins - 1])
@@ -198,8 +198,8 @@ def linear_interpolation(
     interval = t1 - t0
     t = (query_timestamp - t0) / interval
 
-    vec = key_translations[1] - key_translations[0]  # type: ignore
-    translation_interp = key_translations[0] + vec * t  # type: ignore
+    vec = key_translations[1] - key_translations[0]
+    translation_interp = key_translations[0] + vec * t
     return translation_interp
 
 

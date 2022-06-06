@@ -130,7 +130,7 @@ def draw_line_frustum(
         # After clipping the line segment to the view frustum in the camera coordinate frame, we obtain
         # the final set of line segment vertices, and then project these into the image.
         uv, _, _ = cam_model.project_cam_to_img(clipped_points)
-        uv_int: NDArrayInt = np.round(uv).astype(int)  # type: ignore
+        uv_int: NDArrayInt = np.round(uv).astype(int)
         p1, p2 = uv_int[0], uv_int[1]
         img = draw_line_in_img(img, p1, p2, color=color, thickness=thickness, line_type=line_type)
     return img

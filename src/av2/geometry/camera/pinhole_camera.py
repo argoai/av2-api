@@ -261,7 +261,7 @@ class PinholeCamera:
             (4,) tuple of Hessian normal coefficients.
         """
         a, b, c, d = -self.intrinsics.fx_px, 0.0, self.width_px / 2.0, 0.0
-        coeffs: NDArrayFloat = np.array([a, b, c, d]) / np.linalg.norm([a, b, c])  # type: ignore
+        coeffs: NDArrayFloat = np.array([a, b, c, d]) / np.linalg.norm([a, b, c])
         return coeffs
 
     @cached_property
@@ -272,7 +272,7 @@ class PinholeCamera:
             (4,) tuple of Hessian normal coefficients.
         """
         a, b, c, d = self.intrinsics.fx_px, 0.0, self.width_px / 2.0, 0.0
-        coeffs: NDArrayFloat = np.array([a, b, c, d]) / np.linalg.norm([a, b, c])  # type: ignore
+        coeffs: NDArrayFloat = np.array([a, b, c, d]) / np.linalg.norm([a, b, c])
         return coeffs
 
     @cached_property
@@ -283,7 +283,7 @@ class PinholeCamera:
             (4,) tuple of Hessian normal coefficients.
         """
         a, b, c, d = 0.0, self.intrinsics.fx_px, self.height_px / 2.0, 0.0
-        coeffs: NDArrayFloat = np.array([a, b, c, d]) / np.linalg.norm([a, b, c])  # type: ignore
+        coeffs: NDArrayFloat = np.array([a, b, c, d]) / np.linalg.norm([a, b, c])
         return coeffs
 
     @cached_property
@@ -294,7 +294,7 @@ class PinholeCamera:
             (4,) tuple of Hessian normal coefficients.
         """
         a, b, c, d = 0.0, -self.intrinsics.fx_px, self.height_px / 2.0, 0.0
-        coeffs: NDArrayFloat = np.array([a, b, c, d]) / np.linalg.norm([a, b, c])  # type: ignore
+        coeffs: NDArrayFloat = np.array([a, b, c, d]) / np.linalg.norm([a, b, c])
         return coeffs
 
     def near_clipping_plane(self, near_clip_m: float) -> NDArrayFloat:
@@ -402,7 +402,7 @@ class PinholeCamera:
         ray_dirs[:, 2] = fx
 
         # elementwise multiplication of scalars requires last dim to match
-        ray_dirs = ray_dirs / np.linalg.norm(ray_dirs, axis=1, keepdims=True)  # type: ignore
+        ray_dirs = ray_dirs / np.linalg.norm(ray_dirs, axis=1, keepdims=True)
         if ray_dirs.shape[1] != 3:
             raise RuntimeError("Ray directions must be (N,3)")
         return ray_dirs

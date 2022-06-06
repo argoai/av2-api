@@ -187,6 +187,6 @@ def test_blend_images() -> None:
     img_b: NDArrayByte = np.zeros((H, W, 3), dtype=np.uint8)
     img_b[:, :, :3] = np.array([2, 4, 8])  # column 0 has uniform intensity
 
-    blended_img_expected: NDArrayByte = np.round(img_a * alpha + img_b * beta + gamma).astype(np.uint8)  # type: ignore
+    blended_img_expected: NDArrayByte = np.round(img_a * alpha + img_b * beta + gamma).astype(np.uint8)
     blended_img = raster_utils.blend_images(img_a, img_b, alpha=alpha)
     assert np.array_equal(blended_img, blended_img_expected)

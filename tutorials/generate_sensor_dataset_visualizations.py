@@ -70,7 +70,7 @@ def generate_sensor_dataset_visualizations(
                         city_SE3_ego_lidar_t=city_SE3_ego_lidar_t,
                     )
 
-                    uv_int: NDArrayInt = np.round(uv[is_valid_points]).astype(int)  # type: ignore
+                    uv_int: NDArrayInt = np.round(uv[is_valid_points]).astype(int)
                     colors = create_range_map(points_cam[is_valid_points, :3])
                     img = draw_points_xy_in_img(
                         cam.img, uv_int, colors=colors, alpha=0.85, diameter=5, sigma=1.0, with_anti_alias=True

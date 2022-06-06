@@ -207,8 +207,8 @@ def test_crop_points(
     """
     cropped_xyz, mask = geometry_utils.crop_points(points_xyz, lower_bound_inclusive, upper_bound_exclusive)
 
-    np.testing.assert_array_equal(expected_crop_points, cropped_xyz)  # type: ignore
-    np.testing.assert_array_equal(expected_mask, mask)  # type: ignore
+    np.testing.assert_array_equal(expected_crop_points, cropped_xyz)
+    np.testing.assert_array_equal(expected_mask, mask)
 
 
 @pytest.mark.parametrize(
@@ -395,7 +395,7 @@ def test_xyz_to_mat_matrix() -> None:
         [0.5000000, 0.8535534, -0.1464466],
         [-0.7071068, 0.5000000, 0.5000000],
     ]
-    np.testing.assert_allclose(rotation_matrix, rotation_matrix_expected)  # type: ignore
+    np.testing.assert_allclose(rotation_matrix, rotation_matrix_expected)
 
 
 def test_xyz_to_mat_round_trip() -> None:
@@ -403,7 +403,7 @@ def test_xyz_to_mat_round_trip() -> None:
     tait_bryan_angles: NDArrayFloat = np.deg2rad([45.0, 45.0, 45.0])
     rotation_matrix = xyz_to_mat(tait_bryan_angles)
     tait_bryan_angles_ = mat_to_xyz(rotation_matrix)
-    np.testing.assert_allclose(tait_bryan_angles, tait_bryan_angles_)  # type: ignore
+    np.testing.assert_allclose(tait_bryan_angles, tait_bryan_angles_)
 
 
 def test_mat_to_xyz_round_trip() -> None:
@@ -417,7 +417,7 @@ def test_mat_to_xyz_round_trip() -> None:
     )
     tait_bryan_angles = mat_to_xyz(rotation_matrix)
     rotation_matrix_ = xyz_to_mat(tait_bryan_angles)
-    np.testing.assert_allclose(rotation_matrix, rotation_matrix_, atol=1e-10)  # type: ignore
+    np.testing.assert_allclose(rotation_matrix, rotation_matrix_, atol=1e-10)
 
 
 def test_mat_to_xyz_constrained() -> None:
@@ -435,7 +435,7 @@ def test_mat_to_xyz_constrained() -> None:
 
     xyz_expected = np.deg2rad([0, 0, 90])  # [45, 0, 90] -> constrain roll to zero -> [0, 0, 90].
     mat_constrained_expected = xyz_to_mat(xyz_expected)
-    np.testing.assert_allclose(mat_constrained, mat_constrained_expected)  # type: ignore
+    np.testing.assert_allclose(mat_constrained, mat_constrained_expected)
 
 
 def RzRyRx(x: float, y: float, z: float) -> NDArrayFloat:

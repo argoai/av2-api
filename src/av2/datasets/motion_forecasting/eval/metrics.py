@@ -16,7 +16,7 @@ def compute_ade(forecasted_trajectories: NDArrayNumber, gt_trajectory: NDArrayNu
     Returns:
         (K,) Average displacement error for each of the predicted trajectories.
     """
-    displacement_errors = np.linalg.norm(forecasted_trajectories - gt_trajectory, axis=2)  # type: ignore
+    displacement_errors = np.linalg.norm(forecasted_trajectories - gt_trajectory, axis=2)
     ade: NDArrayFloat = np.mean(displacement_errors, axis=1)
     return ade
 
@@ -32,8 +32,8 @@ def compute_fde(forecasted_trajectories: NDArrayNumber, gt_trajectory: NDArrayNu
         (K,) Final displacement error for each of the predicted trajectories.
     """
     # Compute final displacement error for all K trajectories
-    fde_vector = (forecasted_trajectories - gt_trajectory)[:, -1]  # type: ignore
-    fde: NDArrayFloat = np.linalg.norm(fde_vector, axis=-1)  # type: ignore
+    fde_vector = (forecasted_trajectories - gt_trajectory)[:, -1]
+    fde: NDArrayFloat = np.linalg.norm(fde_vector, axis=-1)
     return fde
 
 
@@ -53,7 +53,7 @@ def compute_is_missed_prediction(
         (K,) Bools indicating whether prediction missed by more than specified threshold.
     """
     fde = compute_fde(forecasted_trajectories, gt_trajectory)
-    is_missed_prediction = fde > miss_threshold_m  # type: ignore
+    is_missed_prediction = fde > miss_threshold_m
     return is_missed_prediction
 
 

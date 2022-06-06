@@ -33,7 +33,7 @@ def get_mesh_grid_as_point_cloud(
     ny = max_y - min_y
     x = np.linspace(min_x, max_x, math.ceil(nx / downsample_factor) + 1)
     y = np.linspace(min_y, max_y, math.ceil(ny / downsample_factor) + 1)
-    x_grid, y_grid = np.meshgrid(x, y)  # type: ignore
+    x_grid, y_grid = np.meshgrid(x, y)
 
     x_grid = x_grid.flatten()
     y_grid = y_grid.flatten()

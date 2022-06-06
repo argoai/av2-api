@@ -287,7 +287,7 @@ def test_compute_evaluated_dts_mask() -> None:
     detection_cfg = DetectionCfg(categories=("REGULAR_VEHICLE",), eval_only_roi_instances=False)
     dts_mask = compute_evaluated_dts_mask(dts, detection_cfg)
     dts_mask_: NDArrayBool = np.array([True, False, False, True])
-    np.testing.assert_array_equal(dts_mask, dts_mask_)  # type: ignore
+    np.testing.assert_array_equal(dts_mask, dts_mask_)
 
 
 def test_compute_evaluated_dts_mask_2() -> None:
@@ -313,11 +313,11 @@ def test_compute_evaluated_gts_mask() -> None:
     )
     detection_cfg = DetectionCfg(categories=("REGULAR_VEHICLE",), eval_only_roi_instances=False)
     gts_xyz_ego = gts[..., :3]
-    num_interior_pts = gts[..., -1]
+    num_interior_pts = gts[..., -1].astype(int)
 
     gts_mask = compute_evaluated_gts_mask(gts_xyz_ego, num_interior_pts, detection_cfg)
     gts_mask_: NDArrayBool = np.array([True, False, False, False])
-    np.testing.assert_array_equal(gts_mask, gts_mask_)  # type: ignore
+    np.testing.assert_array_equal(gts_mask, gts_mask_)
 
 
 def test_compute_objects_in_roi_mask() -> None:
@@ -350,4 +350,4 @@ def test_compute_objects_in_roi_mask() -> None:
         sweep_annotations.loc[:, ORDERED_CUBOID_COL_NAMES].to_numpy(), timestamped_city_SE3_egoposes[timestamp_ns], avm
     )
     mask_: NDArrayBool = np.array([True, False, True])
-    np.testing.assert_array_equal(mask, mask_)  # type: ignore
+    np.testing.assert_array_equal(mask, mask_)

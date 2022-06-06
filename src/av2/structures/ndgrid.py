@@ -141,12 +141,12 @@ class BEVGrid(NDGrid):
             raise ValueError("Points must be at least 2d!")
 
         points_xy = points[..., :2].copy()  # Prevent modifying input.
-        indices = self.transform_to_grid_coordinates(points_xy)
-        indices_int, _ = crop_points(indices, lower_bound_inclusive=(0.0, 0.0), upper_bound_exclusive=self.dims)
+        indices_int = self.transform_to_grid_coordinates(points_xy)
+        indices, _ = crop_points(indices_int, lower_bound_inclusive=(0.0, 0.0), upper_bound_exclusive=self.dims)
 
         # Construct uv coordinates.
         H, W = (self.dims[0], self.dims[1])
-        uv = indices_int[..., :2]
+        uv = indices[..., :2].astype(int)
 
         C = len(color)
         shape = (H, W, C)

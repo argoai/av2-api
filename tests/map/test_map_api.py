@@ -190,7 +190,7 @@ class TestArgoverseStaticMap:
                 [874.01, -105.15, -19.58],
             ]
         )
-        np.testing.assert_allclose(ls_polygon, expected_ls_polygon)  # type: ignore
+        np.testing.assert_allclose(ls_polygon, expected_ls_polygon)
 
     def test_get_lane_segment_centerline(self, dummy_static_map: ArgoverseStaticMap) -> None:
         """Ensure lane segment centerlines can be inferred and fetched properly."""
@@ -213,7 +213,7 @@ class TestArgoverseStaticMap:
                 [890.435, -102.41, -19.62],
             ]
         )
-        np.testing.assert_allclose(centerline, expected_centerline)  # type: ignore
+        np.testing.assert_allclose(centerline, expected_centerline)
 
     def test_get_scenario_lane_segments(self, dummy_static_map: ArgoverseStaticMap) -> None:
         """Ensure that all LaneSegment objects in the local map can be returned as a list."""
@@ -275,7 +275,7 @@ class TestArgoverseStaticMap:
         assert vector_da.xyz.shape == (172, 3)
 
         # compare first and last vertex, for equality
-        np.testing.assert_allclose(vector_da.xyz[0], vector_da.xyz[171])  # type: ignore
+        np.testing.assert_allclose(vector_da.xyz[0], vector_da.xyz[171])
 
         # fmt: off
         # compare first 4 vertices
@@ -285,7 +285,7 @@ class TestArgoverseStaticMap:
              [904.64, -137.25, -19.28],
              [904.37, -132.55, -19.32]])
         # fmt: on
-        np.testing.assert_allclose(vector_da.xyz[:4], expected_first4_vertices)  # type: ignore
+        np.testing.assert_allclose(vector_da.xyz[:4], expected_first4_vertices)
 
     def test_get_ground_height_at_xy(self, dummy_static_map: ArgoverseStaticMap) -> None:
         """Ensure that ground height at (x,y) locations can be retrieved properly."""

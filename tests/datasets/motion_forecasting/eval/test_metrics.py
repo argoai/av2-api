@@ -32,7 +32,7 @@ expected_ade_straight_k1 = np.full((1,), np.arange(test_N).mean())
 expected_fde_straight_k1 = np.full((1,), test_N - 1)
 
 # Case 4: K=6 forecasts in straight line on X axis
-forecasted_trajectories_straight_k6: NDArrayFloat = np.concatenate(  # type: ignore
+forecasted_trajectories_straight_k6: NDArrayFloat = np.concatenate(
     [forecasted_trajectories_straight_k1] * 6, axis=0
 )  # 6xNx2
 expected_ade_straight_k6 = np.full((6,), np.arange(test_N).mean())
@@ -63,7 +63,7 @@ def test_compute_ade(forecasted_trajectories: NDArrayNumber, expected_ade: NDArr
         expected_ade: Expected average displacement error.
     """
     ade = metrics.compute_ade(forecasted_trajectories, _STATIONARY_GT_TRAJ)
-    np.testing.assert_allclose(ade, expected_ade)  # type: ignore
+    np.testing.assert_allclose(ade, expected_ade)
 
 
 @pytest.mark.parametrize(
@@ -183,7 +183,7 @@ def test_compute_brier_ade(
     ],
 )
 def test_compute_brier_ade_data_validation(
-    forecast_probabilities: NDArrayNumber, normalize: bool, expectation: AbstractContextManager  # type: ignore
+    forecast_probabilities: NDArrayNumber, normalize: bool, expectation: AbstractContextManager
 ) -> None:
     """Test that test_compute_brier_ade raises the correct errors when inputs are invalid.
 
@@ -247,7 +247,7 @@ def test_compute_brier_fde(
     ],
 )
 def test_compute_brier_fde_data_validation(
-    forecast_probabilities: NDArrayNumber, normalize: bool, expectation: AbstractContextManager  # type: ignore
+    forecast_probabilities: NDArrayNumber, normalize: bool, expectation: AbstractContextManager
 ) -> None:
     """Test that test_compute_brier_fde raises the correct errors when inputs are invalid.
 

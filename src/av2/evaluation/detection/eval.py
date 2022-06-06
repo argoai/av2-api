@@ -169,8 +169,8 @@ def evaluate(
     dts_list, gts_list = zip(*outputs)
 
     METRIC_COLUMN_NAMES = cfg.affinity_thresholds_m + TP_ERROR_COLUMNS + ("is_evaluated",)
-    dts_metrics: NDArrayFloat = np.concatenate(dts_list)  # type: ignore
-    gts_metrics: NDArrayFloat = np.concatenate(gts_list)  # type: ignore
+    dts_metrics: NDArrayFloat = np.concatenate(dts_list)
+    gts_metrics: NDArrayFloat = np.concatenate(gts_list)
     dts.loc[:, METRIC_COLUMN_NAMES] = dts_metrics
     gts.loc[:, METRIC_COLUMN_NAMES] = gts_metrics
 

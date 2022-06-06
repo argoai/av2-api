@@ -162,9 +162,9 @@ class Cuboid:
         Returns:
             Constructed cuboid.
         """
-        translation = params[:3]
-        length_m, width_m, height_m = params[3:6]
-        quat_wxyz = params[6:10]
+        translation: NDArrayFloat = params[:3].astype(float)
+        length_m, width_m, height_m = params[3:6].astype(float)
+        quat_wxyz = params[6:10].astype(float)
 
         rotation = geometry_utils.quat_to_mat(quat_wxyz)
         ego_SE3_object = SE3(rotation=rotation, translation=translation)

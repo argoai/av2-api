@@ -11,7 +11,7 @@ import numpy as np
 from av2.utils.constants import NAN
 from av2.utils.typing import NDArrayByte, NDArrayFloat, NDArrayInt, NDArrayNumber
 
-UINT8_MAX: Final[np.uint8] = np.iinfo(np.uint8).max
+UINT8_MAX: Final[np.uint8] = np.uint8(np.iinfo(np.uint8).max)
 UINT8_BITS: Final[np.uint8] = np.log2(UINT8_MAX + 1).astype(np.uint8)
 
 
@@ -138,7 +138,7 @@ def draw_points_kernel(
 
 
 @nb.njit(nogil=True)
-def clip_line_frustum(p1: NDArrayNumber, p2: NDArrayNumber, planes: NDArrayFloat) -> NDArrayFloat:
+def clip_line_frustum(p1: NDArrayFloat, p2: NDArrayFloat, planes: NDArrayFloat) -> NDArrayFloat:
     """Iterate over the frustum planes and intersect them with the segment.
 
     We exploit the fact that in a camera frustum, all plane normals point inside the frustum volume.
